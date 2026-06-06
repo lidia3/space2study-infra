@@ -25,7 +25,7 @@ sudo systemctl enable ssh
 sudo systemctl start ssh
 
 echo "Installing Docker..."
-sudo apt install -y docker.io docker-compose-plugin
+sudo apt install -y docker.io docker-compose-v2
 
 echo "Enabling Docker..."
 sudo systemctl enable docker
