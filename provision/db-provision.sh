@@ -6,16 +6,18 @@ echo "Updating packages..."
 sudo apt update
 sudo apt upgrade -y
 
+
 echo "Installing base packages..."
-sudo apt install -y 
-curl 
-wget 
-vim 
-unzip 
-net-tools 
-jq 
-htop 
-ca-certificates
+sudo apt install -y \
+    git \
+    curl \
+    wget \
+    vim \
+    unzip \
+    net-tools \
+    jq \
+    htop \
+    ca-certificates
 
 echo "Installing OpenSSH..."
 sudo apt install -y openssh-server
