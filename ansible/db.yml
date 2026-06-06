@@ -1,0 +1,21 @@
+---
+- name: Deploy MongoDB
+  hosts: database
+  gather_facts: false
+
+  tasks:
+
+    - name: Create project directory
+      ansible.builtin.file:
+        path: /home/lidia/projects/mongo
+        state: directory
+
+    - name: Copy Mongo compose file
+      ansible.builtin.copy:
+        src: ../docker/db-compose.yml
+        dest: /home/lidia/projects/mongo/docker-compose.yml
+
+    - name: Start MongoDB
+      ansible.builtin.shell:
+        cmd: docker compose up -d
+        chdir: /home/lidia/projects/mongo
