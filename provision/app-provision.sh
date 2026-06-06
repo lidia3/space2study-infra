@@ -6,17 +6,18 @@ echo "Updating packages..."
 sudo apt update
 sudo apt upgrade -y
 
+
 echo "Installing base packages..."
-sudo apt install -y 
-git 
-curl 
-wget 
-vim 
-unzip 
-net-tools 
-jq 
-htop 
-ca-certificates
+sudo apt install -y \
+    git \
+    curl \
+    wget \
+    vim \
+    unzip \
+    net-tools \
+    jq \
+    htop \
+    ca-certificates
 
 echo "Installing OpenSSH..."
 sudo apt install -y openssh-server
@@ -26,7 +27,7 @@ sudo systemctl enable ssh
 sudo systemctl start ssh
 
 echo "Installing Docker..."
-sudo apt install -y docker.io docker-compose-plugin
+sudo apt install -y docker.io docker-compose-v2
 
 echo "Enabling Docker..."
 sudo systemctl enable docker
