@@ -1,14 +1,12 @@
 ---
-  name: Deploy backend source code
+- name: Deploy backend source code
   hosts: backend
   gather_facts: false
 
   tasks:
-
-    name: Clone backend repository
-    ansible.builtin.git:
-    repo: [git@github.com](mailto:git@github.com):DevOps-ProjectLevel/space2study-backend-lidia3.git
-    dest: /home/lidia/projects/space2study-backend-lidia3
-    version: main
-    update: yes
-
+    - name: Clone backend repository
+      ansible.builtin.git:
+        repo: "git@github.com:DevOps-ProjectLevel/space2study-backend-lidia3.git"
+        dest: "/home/lidia/projects/space2study-backend-lidia3"
+        version: main
+        update: true
