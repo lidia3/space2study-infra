@@ -6,27 +6,22 @@
 
   tasks:
 
-  - name: Create projects directory
-    ansible.builtin.file:
-    path: /home/lidia/projects
-    state: directory
+    - name: Create projects directory
+      ansible.builtin.file:
+        path: /home/lidia/projects
+        state: directory
 
-  - name: Clone backend repository
-    ansible.builtin.git:
-    repo: git@github.com:DevOps-ProjectLevel/space2study-backend-lidia3.git
-    dest: /home/lidia/projects/space2study-backend-lidia3
-    version: main
-    update: yes
+    - name: Clone backend repository
+      ansible.builtin.git:
+        repo: git@github.com:DevOps-ProjectLevel/space2study-backend-lidia3.git
+        dest: /home/lidia/projects/space2study-backend-lidia3
+        version: main
+        update: yes
 
-  - name: Clone frontend repository
-    ansible.builtin.git:
-    repo: git@github.com:DevOps-ProjectLevel/space2study-frontend-lidia3.git
-    dest: /home/lidia/projects/space2study-frontend-lidia3
-    version: main
-    update: yes
-
-  - name: Create docker directory
-    ansible.builtin.file:
-    path: /home/lidia/projects/docker
-    state: directory
+    - name: Clone frontend repository
+      ansible.builtin.git:
+        repo: git@github.com:DevOps-ProjectLevel/space2study-frontend-lidia3.git
+        dest: /home/lidia/projects/space2study-frontend-lidia3
+        version: main
+        update: yes
 
