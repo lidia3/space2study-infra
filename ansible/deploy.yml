@@ -17,6 +17,12 @@
         dest: /home/lidia/projects/space2study-backend-lidia3
         version: main
         update: yes
+   
+    - name: Generate backend env
+      template:
+        src: templates/backend.env.j2
+        dest: /home/lidia/projects/space2study-backend-lidia3/.env.docker
+        mode: "0600"
 
     - name: Clone frontend repository
       ansible.builtin.git:
@@ -24,6 +30,13 @@
         dest: /home/lidia/projects/space2study-frontend-lidia3
         version: main
         update: yes
+
+    - name: Generate frontend env
+      template:
+        src: templates/frontend.env.j2
+        dest: /home/lidia/projects/space2study-frontend-lidia3/.env
+        mode: "0644"
+
 
     - name: Copy docker-compose
       copy:
