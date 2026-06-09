@@ -25,3 +25,14 @@
         version: main
         update: yes
 
+    - name: Copy docker-compose
+      copy:
+        src: ../docker/docker-compose.yml
+        dest: /home/lidia/projects/space2study-infra/docker/docker-compose.yml
+
+
+    - name: Run docker compose
+      command:
+        cmd: docker compose up -d --build
+        chdir: /home/lidia/projects/space2study-infra/docker
+
