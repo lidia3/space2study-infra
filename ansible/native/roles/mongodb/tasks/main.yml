@@ -1,0 +1,17 @@
+---
+- name: Create MongoDB data directory
+  ansible.builtin.file:
+    path: /home/lidia/mongodb/data
+    state: directory
+    mode: '0755'
+
+- name: Start MongoDB container
+  community.docker.docker_container:
+    name: mongodb
+    image: mongo:8
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "27017:27017"
+    volumes:
+      - /opt/mongodb/data:/data/db
