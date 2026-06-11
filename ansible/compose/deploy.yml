@@ -40,7 +40,7 @@
 
     - name: Copy docker-compose
       copy:
-        src: ../docker/docker-compose.yml
+        src: ../../docker/docker-compose.yml
         dest: /home/lidia/projects/space2study-infra/docker/docker-compose.yml
 
 

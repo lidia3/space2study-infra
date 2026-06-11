@@ -1,11 +1,11 @@
 ---
 
-* name: Test Ansible connectivity
+- name: Test Ansible connectivity
   hosts: all
   gather_facts: false
 
   tasks:
 
-  * name: Ping hosts
+  - name: Ping hosts
     ansible.builtin.ping:
 
