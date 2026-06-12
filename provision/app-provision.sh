@@ -7,15 +7,15 @@ sudo apt update
 sudo apt upgrade -y
 
 echo "Installing base packages..."
-sudo apt install -y 
-git 
-curl 
-wget 
-vim 
-openssh-server 
-ca-certificates 
-gnupg 
-lsb-release
+sudo apt install -y \
+  git \
+  curl \
+  wget \
+  vim \
+  openssh-server \
+  ca-certificates \
+  gnupg \
+  lsb-release
 
 echo "Enabling SSH..."
 sudo systemctl enable ssh
