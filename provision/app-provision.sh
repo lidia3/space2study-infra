@@ -16,6 +16,7 @@ sudo apt install -y \
   ca-certificates \
   gnupg \
   lsb-release
+  build-essential
 
 echo "Enabling SSH..."
 sudo systemctl enable ssh
