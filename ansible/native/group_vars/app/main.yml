@@ -1,0 +1,4 @@
+mongodb_url: mongodb://localhost:27017/space2study
+
+client_url: http://192.168.0.124:3001
+server_url: http://192.168.0.124:3000

@@ -16,8 +16,48 @@
     src: backend.env.j2
     dest: /home/lidia/apps/backend/.env
     mode: "0600"
+- name: Check node version
+  command: node -v
+  register: node_version
 
-- name: Install backend dependencies
+- debug:
+    var: node_version.stdout
+
+- name: Check npm version
+  command: npm -v
+  register: npm_version
+
+- debug:
+    var: npm_version.stdout
+
+- name: Check make
+  command: which make
+  register: make_check
+  ignore_errors: true
+
+- debug:
+    var: make_check
+
+- name: Install backend dependenciec
   ansible.builtin.command:
     cmd: npm install
     chdir: /home/lidia/apps/backend
+
+- name: Deploy backend systemd service
+  ansible.builtin.template:
+    src: backend.service.j2
+    dest: /etc/systemd/system/space2study-backend.service
+    mode: "0644"
+  become: true
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true
+
+- name: Enable and start backend service
+  ansible.builtin.systemd:
+    name: space2study-backend
+    enabled: true
+    state: started
+  become: true

@@ -1,0 +1,14 @@
+[Unit]
+Description=Space2Study Backend
+After=network.target docker.service
+
+[Service]
+Type=simple
+User=lidia
+WorkingDirectory=/home/lidia/apps/backend
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
