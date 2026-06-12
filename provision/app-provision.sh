@@ -15,7 +15,7 @@ sudo apt install -y \
   openssh-server \
   ca-certificates \
   gnupg \
-  lsb-release
+  lsb-release \
   build-essential
 
 echo "Enabling SSH..."
