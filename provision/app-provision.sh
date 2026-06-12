@@ -37,3 +37,11 @@ sudo usermod -aG docker $USER
 echo "Provisioning completed."
 echo "Log out and log back in for docker group changes to take effect."
 
+
+echo "Installing Node.js..."
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+echo "Checking Node.js version..."
+node -v
+npm -v

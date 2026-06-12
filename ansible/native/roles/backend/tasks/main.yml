@@ -16,3 +16,8 @@
     src: backend.env.j2
     dest: /home/lidia/apps/backend/.env
     mode: "0600"
+
+- name: Install backend dependencies
+  ansible.builtin.command:
+    cmd: npm install
+    chdir: /home/lidia/apps/backend
