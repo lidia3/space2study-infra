@@ -1,3 +1,47 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for roles/frontend
+- name: Create frontend directory
+  ansible.builtin.file:
+    path: /home/lidia/apps
+    state: directory
+
+- name: Clone frontend repository
+  ansible.builtin.git:
+    repo: git@github.com:DevOps-ProjectLevel/space2study-frontend-lidia3.git
+    dest: /home/lidia/apps/frontend
+    version: main
+    update: yes
+
+- name: Generate frontend env
+  ansible.builtin.template:
+    src: frontend.env.j2
+    dest: /home/lidia/apps/frontend/.env
+    mode: "0600"
+
+- name: Install frontend dependencies
+  ansible.builtin.command:
+    cmd: npm install
+    chdir: /home/lidia/apps/frontend
+
+- name: Build frontend
+  ansible.builtin.command:
+    cmd: npm run build
+    chdir: /home/lidia/apps/frontend
+
+- name: Deploy frontend systemd service
+  ansible.builtin.template:
+    src: frontend.service.j2
+    dest: /etc/systemd/system/space2study-frontend.service
+    mode: "0644"
+  become: true
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true
+
+- name: Enable and start frontend service
+  ansible.builtin.systemd:
+    name: space2study-frontend
+    enabled: true
+    state: started
+  become: true

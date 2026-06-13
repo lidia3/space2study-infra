@@ -8,7 +8,7 @@
 - name: Start MongoDB container
   community.docker.docker_container:
     name: mongodb
-    image: mongo:8
+    image: mongo:7
     state: started
     restart_policy: unless-stopped
     published_ports:
