@@ -1,3 +1,25 @@
 *.log
 .env
 .env.*
+
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# macOS
+.DS_Store
+
+# Jenkins
+.jenkins/
+
+# Secrets
+*.pem
+*.key
+*.tfvars
+
+# AWS
+.aws/
+AWSCLIV2.pkg
