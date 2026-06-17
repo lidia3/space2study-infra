@@ -3,9 +3,25 @@ pipeline {
 
     stages {
 
-        stage('Terraform Version') {
+        stage('Checkout') {
             steps {
-                sh '/opt/homebrew/bin/terraform version'
+                checkout scm
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                dir('terraform') {
+                    sh '/opt/homebrew/bin/terraform init'
+                }
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                dir('terraform') {
+                    sh '/opt/homebrew/bin/terraform validate'
+                }
             }
         }
 
