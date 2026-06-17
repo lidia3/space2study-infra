@@ -30,5 +30,14 @@ pipeline {
                 sh '/opt/homebrew/bin/ansible --version'
             }
         }
+
+        stage('Terraform Plan') {
+            steps {
+                dir('terraform') {
+                    sh '/opt/homebrew/bin/terraform plan'
+        }
+    }
+}
+
     }
 }
