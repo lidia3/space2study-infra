@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Terraform Init') {
             steps {
                 dir('terraform') {
@@ -35,9 +29,17 @@ pipeline {
             steps {
                 dir('terraform') {
                     sh '/opt/homebrew/bin/terraform plan'
+                }
+            }
         }
-    }
-}
+
+        stage('Terraform Apply') {
+            steps {
+                dir('terraform') {
+                    sh '/opt/homebrew/bin/terraform apply -auto-approve'
+                }
+            }
+        }
 
     }
 }
