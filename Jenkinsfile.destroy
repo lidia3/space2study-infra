@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Terraform Destroy') {
+            steps {
+                dir('terraform') {
+                    sh '/opt/homebrew/bin/terraform destroy -auto-approve'
+                }
+            }
+        }
+
+    }
+}
