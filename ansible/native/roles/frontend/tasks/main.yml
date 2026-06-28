@@ -6,7 +6,8 @@
 
 - name: Clone frontend repository
   ansible.builtin.git:
-    repo: https://github.com/DevOps-ProjectLevel/space2study-frontend-lidia3.git
+#    repo: https://github.com/DevOps-ProjectLevel/space2study-frontend-lidia3.git
+    repo: "https://{{ github_username }}:{{ github_token }}@github.com/DevOps-ProjectLevel/space2study-frontend-lidia3.git"
     dest: /home/ubuntu/apps/frontend
     version: main
     update: yes
