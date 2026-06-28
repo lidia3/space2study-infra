@@ -6,7 +6,7 @@
 
 - name: Clone backend repository
   ansible.builtin.git:
-    repo: git@github.com:DevOps-ProjectLevel/space2study-backend-lidia3.git
+    repo: https://github.com/DevOps-ProjectLevel/space2study-backend-lidia3.git
     dest: /home/ubuntu/apps/backend
     version: main
     update: yes
