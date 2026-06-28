@@ -1,20 +1,20 @@
 ---
 - name: Create backend directory
   ansible.builtin.file:
-    path: /home/lidia/apps
+    path: /home/ubuntu/apps
     state: directory
 
 - name: Clone backend repository
   ansible.builtin.git:
     repo: git@github.com:DevOps-ProjectLevel/space2study-backend-lidia3.git
-    dest: /home/lidia/apps/backend
+    dest: /home/ubuntu/apps/backend
     version: main
     update: yes
 
 - name: Generate backend env
   ansible.builtin.template:
     src: backend.env.j2
-    dest: /home/lidia/apps/backend/.env
+    dest: /home/ubuntu/apps/backend/.env
     mode: "0600"
 - name: Check node version
   command: node -v
@@ -41,7 +41,7 @@
 - name: Install backend dependenciec
   ansible.builtin.command:
     cmd: npm install
-    chdir: /home/lidia/apps/backend
+    chdir: /home/ubuntu/apps/backend
 
 - name: Deploy backend systemd service
   ansible.builtin.template:

@@ -1,7 +1,7 @@
 ---
 - name: Create MongoDB data directory
   ansible.builtin.file:
-    path: /home/lidia/mongodb/data
+    path: /home/ubuntu/mongodb/data
     state: directory
     mode: '0755'
 

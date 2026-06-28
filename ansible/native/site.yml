@@ -1,9 +1,17 @@
 # ansible/native/site.yml
+
 ---
-- hosts: app
-  gather_facts: false
-#  become: true
+- hosts: database
+  become: true
   roles:
     - mongodb
+
+- hosts: backend
+  become: true
+  roles:
     - backend
+
+- hosts: frontend
+  become: true
+  roles:
     - frontend
