@@ -40,17 +40,25 @@
     groups: docker
     append: true
 
-- name: Install NodeSource repository
-  ansible.builtin.shell: |
-    curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
-  args:
-    creates: /etc/apt/sources.list.d/nodesource.list
-
-- name: Install Node.js
+- name: Install Node.js and npm
   ansible.builtin.apt:
-    name: nodejs
-    update_cache: yes
+    name:
+      - nodejs
+      - npm
     state: present
+    update_cache: yes
+
+#- name: Install NodeSource repository
+#  ansible.builtin.shell: |
+#    curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+#  args:
+#    creates: /etc/apt/sources.list.d/nodesource.list
+
+#- name: Install Node.js
+#  ansible.builtin.apt:
+#    name: nodejs
+#    update_cache: yes
+#    state: present
 
 - name: Check Node version
   ansible.builtin.command: node -v
