@@ -4,14 +4,17 @@
 - hosts: database
   become: true
   roles:
+    - common
     - mongodb
 
 - hosts: backend
   become: true
   roles:
+    - common
     - backend
 
 - hosts: frontend
   become: true
   roles:
+    - common
     - frontend

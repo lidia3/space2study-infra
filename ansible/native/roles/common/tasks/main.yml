@@ -1,0 +1,69 @@
+---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Upgrade packages
+  ansible.builtin.apt:
+    upgrade: dist
+
+- name: Install common packages
+  ansible.builtin.apt:
+    name:
+      - git
+      - curl
+      - wget
+      - vim
+      - openssh-server
+      - ca-certificates
+      - gnupg
+      - lsb-release
+      - build-essential
+    state: present
+
+- name: Install Docker
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - docker-compose-v2
+    state: present
+
+- name: Enable Docker
+  ansible.builtin.systemd:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Add ubuntu user to docker group
+  ansible.builtin.user:
+    name: ubuntu
+    groups: docker
+    append: true
+
+- name: Install NodeSource repository
+  ansible.builtin.shell: |
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
+
+- name: Install Node.js
+  ansible.builtin.apt:
+    name: nodejs
+    update_cache: yes
+    state: present
+
+- name: Check Node version
+  ansible.builtin.command: node -v
+  register: node_version
+  changed_when: false
+
+- debug:
+    var: node_version.stdout
+
+- name: Check npm version
+  ansible.builtin.command: npm -v
+  register: npm_version
+  changed_when: false
+
+- debug:
+    var: npm_version.stdout
