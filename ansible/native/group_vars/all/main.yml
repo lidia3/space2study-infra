@@ -1,0 +1,9 @@
+app_ip: 192.168.0.124
+
+client_url: "http://{{ app_ip }}:3001"
+server_url: "http://{{ app_ip }}"
+
+api_base_path: "http://{{ app_ip }}:3000"
+mongodb_url: "mongodb://localhost:27017/space2study"
+
+vault_mail_pass: "1111"
