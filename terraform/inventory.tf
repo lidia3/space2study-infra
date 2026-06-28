@@ -17,7 +17,8 @@ ${aws_instance.database.public_ip}
 
 [all:vars]
 ansible_user=ubuntu
-ansible_ssh_private_key_file=~/.ssh/aws-space2study
+ansible_ssh_private_key_file=/Users/lidiareshnivetska/.ssh/aws-space2study
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 EOF
 
 }
