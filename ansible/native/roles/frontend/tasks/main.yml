@@ -16,6 +16,8 @@
   ansible.builtin.template:
     src: frontend.env.j2
     dest: /home/ubuntu/apps/frontend/.env
+    owner: ubuntu
+    group: ubuntu
     mode: "0600"
 
 - name: Install frontend dependencies
