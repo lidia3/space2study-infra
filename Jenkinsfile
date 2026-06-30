@@ -50,11 +50,23 @@ pipeline {
         stage('Ansible Ping') {
             steps {
                 dir('ansible/native') {
-                    sh '''
-                    /opt/homebrew/bin/ansible all \
-                    -i inventory.ini \
-                    -m ping
-                    '''
+                    withCredentials([
+                        string(
+                            credentialsId: 'ansible-vault-password',
+                            variable: 'VAULT_PASS'
+                        )
+                    ]) {
+                        sh '''
+                        echo "$VAULT_PASS" > .vault_pass
+
+                        /opt/homebrew/bin/ansible all \
+                        -i inventory.ini \
+                        -m ping \
+                        --vault-password-file .vault_pass
+
+                        rm -f .vault_pass
+                        '''
+                    }
                 }
             }
         }
