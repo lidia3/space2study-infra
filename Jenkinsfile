@@ -98,12 +98,23 @@ pipeline {
         stage('Backend Health Check') {
             steps {
                 dir('ansible/native') {
-                    sh '''
-                    /opt/homebrew/bin/ansible backend \
-                    -i inventory.ini \
-                    -m shell \
-                    -a "systemctl is-active space2study-backend"
-                    '''
+                    withCredentials([
+                        string(
+                            credentialsId: 'ansible-vault-password',
+                            variable: 'VAULT_PASS'
+                        )
+                    ]) {
+                        sh '''
+                        echo "$VAULT_PASS" > .vault_pass
+                        /opt/homebrew/bin/ansible backend \
+                        -i inventory.ini \
+                        -m shell \
+                        -a "systemctl is-active space2study-backend" \
+                        --vault-password-file .vault_pass
+
+                        rm -f .vault_pass
+                        '''
+                    }
                 }
             }
         }
@@ -111,12 +122,23 @@ pipeline {
         stage('Frontend Health Check') {
             steps {
                 dir('ansible/native') {
-                    sh '''
-                    /opt/homebrew/bin/ansible frontend \
-                    -i inventory.ini \
-                    -m shell \
-                    -a "systemctl is-active space2study-frontend"
-                    '''
+                    withCredentials([
+                        string(
+                            credentialsId: 'ansible-vault-password',
+                            variable: 'VAULT_PASS'
+                        )
+                    ]) {
+                        sh '''
+                        /opt/homebrew/bin/ansible frontend \
+                        -i inventory.ini \
+                        -m shell \
+                        -a "systemctl is-active space2study-frontend" \
+                        --vault-password-file .vault_pass
+
+                        rm -f .vault_pass
+
+                        '''
+                    }
                 }
             }
         }
