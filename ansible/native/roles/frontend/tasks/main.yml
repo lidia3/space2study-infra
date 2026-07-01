@@ -11,6 +11,8 @@
     dest: /home/ubuntu/apps/frontend
     version: main
     update: yes
+  become: true
+  become_user: ubuntu
 
 - name: Generate frontend env
   ansible.builtin.template:
@@ -24,11 +26,15 @@
   ansible.builtin.command:
     cmd: npm install
     chdir: /home/ubuntu/apps/frontend
+  become: true
+  become_user: ubuntu
 
 - name: Build frontend
   ansible.builtin.command:
     cmd: npm run build
     chdir: /home/ubuntu/apps/frontend
+  become: true
+  become_user: ubuntu
 
 - name: Deploy frontend systemd service
   ansible.builtin.template:
