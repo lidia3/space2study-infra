@@ -14,7 +14,7 @@ resource "aws_instance" "agent" {
 
 resource "aws_instance" "frontend" {
   ami           = "ami-0e86e20dae9224db8"
-  instance_type = "t3.micro"
+  instance_type = "t3.small"
   key_name      = aws_key_pair.deployer.key_name
 
   vpc_security_group_ids = [
