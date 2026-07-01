@@ -22,6 +22,15 @@
     group: ubuntu
     mode: "0600"
 
+- name: Ensure frontend directory ownership
+  ansible.builtin.file:
+    path: /home/ubuntu/apps/frontend
+    owner: ubuntu
+    group: ubuntu
+    recurse: true
+  become: true
+
+
 - name: Install frontend dependencies
   ansible.builtin.command:
     cmd: npm install
