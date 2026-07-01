@@ -11,29 +11,6 @@
       - unzip
       - curl
       - wget
-      - awscli
-      - ansible
-    state: present
-
-- name: Add HashiCorp GPG key
-  ansible.builtin.shell: |
-    wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-  args:
-    creates: /usr/share/keyrings/hashicorp-archive-keyring.gpg
-
-- name: Add HashiCorp repository
-  ansible.builtin.copy:
-    dest: /etc/apt/sources.list.d/hashicorp.list
-    content: |
-      deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
-
-- name: Update apt cache after adding HashiCorp repository
-  ansible.builtin.apt:
-    update_cache: yes
-
-- name: Install Terraform
-  ansible.builtin.apt:
-    name: terraform
     state: present
 
 - name: Create Jenkins working directory
@@ -49,40 +26,7 @@
   register: java_version
   changed_when: false
 
-- name: Show Terraform version
-  ansible.builtin.command: terraform version
-  register: terraform_version
-  changed_when: false
-
-- name: Show Ansible version
-  ansible.builtin.command: ansible --version
-  register: ansible_version
-  changed_when: false
-
-#- name: Show AWS CLI version
-#  ansible.builtin.command: aws --version
-#  register: aws_version
-#  changed_when: false
-
-- name: Download AWS CLI
-  get_url:
-    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-    dest: /tmp/awscliv2.zip
-
-- name: Unzip AWS CLI
-  unarchive:
-    src: /tmp/awscliv2.zip
-    dest: /tmp
-    remote_src: yes
-
-- name: Install AWS CLI
-  command: /tmp/aws/install
-  args:
-    creates: /usr/local/bin/aws
-
 - name: Display installed versions
   ansible.builtin.debug:
     msg:
-      - "{{ terraform_version.stdout }}"
-      - "{{ ansible_version.stdout_lines[0] }}"
-      - "{{ aws_version.stderr | default(aws_version.stdout) }}"
+      - "{{ java_version.stderr | default(java_version.stdout) }}"
