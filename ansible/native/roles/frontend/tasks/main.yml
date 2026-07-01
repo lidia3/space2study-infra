@@ -29,6 +29,18 @@
   become: true
   become_user: ubuntu
 
+- name: Who am I
+  ansible.builtin.command: whoami
+  register: who
+
+- debug:
+    var: who.stdout
+
+- name: Check memory
+  ansible.builtin.shell: |
+    free -h
+    ps aux | grep node
+
 - name: Build frontend
   ansible.builtin.command:
     cmd: npm run build
