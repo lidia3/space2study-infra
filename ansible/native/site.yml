@@ -19,8 +19,8 @@
     - common
     - frontend
 
-#- hosts: agent
-#  become: true
+- hosts: agent
+  become: true
 
-#  roles:
-#    - jenkins_agent
+  roles:
+    - jenkins_agent
