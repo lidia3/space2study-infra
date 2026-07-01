@@ -3,6 +3,9 @@
   ansible.builtin.file:
     path: /home/ubuntu/apps
     state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: "0755"
 
 - name: Clone frontend repository
   ansible.builtin.git:
