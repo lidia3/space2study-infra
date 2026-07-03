@@ -196,8 +196,8 @@ pipeline {
             steps {
                 dir('terraform') {
                     script {
-                        env.BACKEND_IP = sh(
-                        script: "/opt/homebrew/bin/terraform output -raw backend_ip",
+                        env.FRONT_IP = sh(
+                        script: "/opt/homebrew/bin/terraform output -raw frontend_ip",
                         returnStdout: true
                 ).trim()
             }
@@ -210,7 +210,7 @@ pipeline {
 
             steps {
                 sh '''
-                curl -f http://${BACKEND_IP}:3000
+                curl -f http://${FRONT_IP}:3000
                 '''
     }
 }
