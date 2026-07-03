@@ -210,7 +210,7 @@ pipeline {
 
             steps {
                 sh '''
-                curl -f http://${FRONT_IP}:3000
+                curl -f http://${FRONT_IP}:3001
                 '''
     }
 }
