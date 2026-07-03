@@ -1,0 +1,5 @@
+---
+- import_playbook: prepare-k8s.yml
+- import_playbook: init-control-plane.yml
+- import_playbook: join-worker.yml
+- import_playbook: deploy-space2study.yml

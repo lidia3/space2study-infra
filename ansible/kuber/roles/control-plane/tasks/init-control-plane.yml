@@ -1,0 +1,6 @@
+---
+- hosts: control_plane
+  become: true
+
+  roles:
+    - control-plane

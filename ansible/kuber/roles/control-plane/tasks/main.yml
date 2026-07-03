@@ -1,0 +1,48 @@
+---
+- name: Initialize Kubernetes Control Plane
+  command: kubeadm init --pod-network-cidr=192.168.0.0/16
+  args:
+    creates: /etc/kubernetes/admin.conf
+  register: kubeadm_init
+
+- name: Create .kube directory
+  file:
+    path: /home/ubuntu/.kube
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: "0755"
+
+- name: Copy admin.conf
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/ubuntu/.kube/config
+    remote_src: true
+    owner: ubuntu
+    group: ubuntu
+    mode: "0644"
+
+- name: Install Calico
+  become_user: ubuntu
+  command: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/calico.yaml
+  environment:
+    KUBECONFIG: /home/ubuntu/.kube/config
+
+
+- name: Get join command
+  command: kubeadm token create --print-join-command
+  register: join_command
+
+- name: Save join command
+  set_fact:
+    kubeadm_join_command: "{{ join_command.stdout }}"
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  register: join_command
+
+- name: Save join command
+  copy:
+    content: "{{ join_command.stdout }}"
+    dest: /tmp/kubeadm_join.sh
+    mode: '0755'

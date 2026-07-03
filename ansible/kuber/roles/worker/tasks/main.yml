@@ -1,0 +1,10 @@
+- name: Read join command from control plane
+  delegate_to: "{{ groups['control_plane'][0] }}"
+  slurp:
+    src: /tmp/kubeadm_join.sh
+  register: join_script
+
+- name: Join cluster
+  command: "{{ join_script.content | b64decode }}"
+  args:
+    creates: /etc/kubernetes/kubelet.conf
