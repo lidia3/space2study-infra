@@ -190,6 +190,31 @@ pipeline {
                 }
             }
         }
+       
+        
+        stage('Get Backend IP') {
+            steps {
+                dir('terraform') {
+                    script {
+                        env.BACKEND_IP = sh(
+                        script: "/opt/homebrew/bin/terraform output -raw backend_public_ip",
+                        returnStdout: true
+                ).trim()
+            }
+        }
+    }
+}
+
+        stage('Backend Smoke Test') {
+            agent { label 'agent' }
+
+            steps {
+                sh '''
+                curl -f http://${BACKEND_IP}:3000
+                '''
+    }
+}
+
 
     }
 }
