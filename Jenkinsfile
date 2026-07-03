@@ -197,7 +197,7 @@ pipeline {
                 dir('terraform') {
                     script {
                         env.BACKEND_IP = sh(
-                        script: "/opt/homebrew/bin/terraform output -raw backend_public_ip",
+                        script: "/opt/homebrew/bin/terraform output -raw backend_ip",
                         returnStdout: true
                 ).trim()
             }
