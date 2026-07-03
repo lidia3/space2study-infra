@@ -1,9 +1,10 @@
 pipeline {
-    agent any
+    agent none
 
     stages {
 
         stage('Terraform Init') {
+            agent any
             steps {
                 dir('terraform') {
                     sh '/opt/homebrew/bin/terraform init'
@@ -12,6 +13,7 @@ pipeline {
         }
 
         stage('Terraform Validate') {
+            agent any
             steps {
                 dir('terraform') {
                     sh '/opt/homebrew/bin/terraform validate'
@@ -20,12 +22,14 @@ pipeline {
         }
 
         stage('Ansible Version') {
+            agent any
             steps {
                 sh '/opt/homebrew/bin/ansible --version'
             }
         }
 
         stage('Terraform Plan') {
+            agent any
             steps {
                 dir('terraform') {
                     sh '/opt/homebrew/bin/terraform plan -out=tfplan'
@@ -34,6 +38,7 @@ pipeline {
         }
 
         stage('Terraform Apply') {
+            agent any
             steps {
                 dir('terraform') {
                     sh '/opt/homebrew/bin/terraform apply -auto-approve tfplan'
@@ -42,12 +47,14 @@ pipeline {
         }
 
         stage('Wait for EC2') {
+            agent any
             steps {
                 sleep(time: 30, unit: 'SECONDS')
             }
         }
 
         stage('Ansible Ping') {
+            agent any
             steps {
                 dir('ansible/native') {
                     withCredentials([
@@ -72,6 +79,7 @@ pipeline {
         }
 
         stage('Ansible Deploy') {
+            agent any
             steps {
                 dir('ansible/native') {
                     withCredentials([
@@ -96,6 +104,7 @@ pipeline {
         }
 
         stage('Backend Health Check') {
+            agent any
             steps {
                 dir('ansible/native') {
                     withCredentials([
@@ -120,6 +129,7 @@ pipeline {
         }
 
         stage('Frontend Health Check') {
+            agent any
             steps {
                 dir('ansible/native') {
                     withCredentials([
@@ -145,6 +155,7 @@ pipeline {
         }
 
         stage('Backend API Check') {
+            agent any
             steps {
                 dir('ansible/native') {
                     withCredentials([
@@ -169,6 +180,7 @@ pipeline {
         }
 
         stage('Frontend HTTP Check') {
+            agent any
             steps {
                 dir('ansible/native') {
                     withCredentials([

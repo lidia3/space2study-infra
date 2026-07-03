@@ -11,7 +11,48 @@
       - unzip
       - curl
       - wget
+      - ansible
+      - nodejs
+      - npm
     state: present
+
+- name: Add HashiCorp GPG key
+  ansible.builtin.shell: |
+    wget -O- https://apt.releases.hashicorp.com/gpg | \
+    gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+- name: Add HashiCorp repository
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/hashicorp.list
+    content: |
+      deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+
+- name: Update apt cache after adding HashiCorp repository
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Terraform
+  ansible.builtin.apt:
+    name: terraform
+    state: present
+
+- name: Download AWS CLI
+  ansible.builtin.get_url:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /tmp/awscliv2.zip
+
+- name: Extract AWS CLI
+  ansible.builtin.unarchive:
+    src: /tmp/awscliv2.zip
+    dest: /tmp
+    remote_src: true
+
+- name: Install AWS CLI
+  ansible.builtin.command: /tmp/aws/install
+  args:
+    creates: /usr/local/bin/aws
 
 - name: Create Jenkins working directory
   ansible.builtin.file:
@@ -20,13 +61,3 @@
     owner: ubuntu
     group: ubuntu
     mode: "0755"
-
-- name: Show Java version
-  ansible.builtin.command: java -version
-  register: java_version
-  changed_when: false
-
-- name: Display installed versions
-  ansible.builtin.debug:
-    msg:
-      - "{{ java_version.stderr | default(java_version.stdout) }}"
