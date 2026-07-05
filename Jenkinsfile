@@ -1,10 +1,11 @@
 pipeline {
     agent any
+
     stages {
 
         stage('Terraform Init') {
             steps {
-                dir('terraform') {
+                dir('terraform/k8s') {
                     sh '/opt/homebrew/bin/terraform init'
                 }
             }
@@ -12,7 +13,7 @@ pipeline {
 
         stage('Terraform Validate') {
             steps {
-                dir('terraform') {
+                dir('terraform/k8s') {
                     sh '/opt/homebrew/bin/terraform validate'
                 }
             }
@@ -26,7 +27,7 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                dir('terraform') {
+                dir('terraform/k8s') {
                     sh '/opt/homebrew/bin/terraform plan -out=tfplan'
                 }
             }
@@ -34,7 +35,7 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                dir('terraform') {
+                dir('terraform/k8s') {
                     sh '/opt/homebrew/bin/terraform apply -auto-approve tfplan'
                 }
             }
@@ -42,13 +43,45 @@ pipeline {
 
         stage('Wait for EC2') {
             steps {
-                sleep(time: 30, unit: 'SECONDS')
+                sleep(time: 40, unit: 'SECONDS')
+            }
+        }
+
+        stage('Generate Inventory') {
+            steps {
+                script {
+
+                    dir('terraform/k8s') {
+
+                        env.CONTROL_PLANE_IP = sh(
+                            script: "/opt/homebrew/bin/terraform output -raw control_plane_public_ip",
+                            returnStdout: true
+                        ).trim()
+
+                        env.WORKER_IP = sh(
+                            script: "/opt/homebrew/bin/terraform output -raw worker_public_ip",
+                            returnStdout: true
+                        ).trim()
+                    }
+
+                    writeFile file: 'ansible/kuber/inventory.ini', text: """
+[control_plane]
+${env.CONTROL_PLANE_IP} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-space2study
+
+[worker]
+${env.WORKER_IP} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-space2study
+
+[kubernetes:children]
+control_plane
+worker
+"""
+                }
             }
         }
 
         stage('Ansible Ping') {
             steps {
-                dir('ansible/native') {
+                dir('ansible/kuber') {
                     withCredentials([
                         string(
                             credentialsId: 'ansible-vault-password',
@@ -70,9 +103,9 @@ pipeline {
             }
         }
 
-        stage('Ansible Deploy') {
+        stage('Deploy Kubernetes Cluster') {
             steps {
-                dir('ansible/native') {
+                dir('ansible/kuber') {
                     withCredentials([
                         string(
                             credentialsId: 'ansible-vault-password',
@@ -84,7 +117,7 @@ pipeline {
 
                         /opt/homebrew/bin/ansible-playbook \
                         -i inventory.ini \
-                        site.yml \
+                        playbooks/site.yml \
                         --vault-password-file .vault_pass
 
                         rm -f .vault_pass
@@ -94,127 +127,27 @@ pipeline {
             }
         }
 
-        stage('Backend Health Check') {
+        stage('Check Kubernetes Nodes') {
             steps {
-                dir('ansible/native') {
-                    withCredentials([
-                        string(
-                            credentialsId: 'ansible-vault-password',
-                            variable: 'VAULT_PASS'
-                        )
-                    ]) {
-                        sh '''
-                        echo "$VAULT_PASS" > .vault_pass
-                        /opt/homebrew/bin/ansible backend \
-                        -i inventory.ini \
-                        -m shell \
-                        -a "systemctl is-active space2study-backend" \
-                        --vault-password-file .vault_pass
-
-                        rm -f .vault_pass
-                        '''
-                    }
-                }
+                sh """
+                ssh -o StrictHostKeyChecking=no \
+                -i ~/.ssh/aws-space2study \
+                ubuntu@${CONTROL_PLANE_IP} \
+                "kubectl get nodes"
+                """
             }
         }
 
-        stage('Frontend Health Check') {
+        stage('Check Kubernetes Pods') {
             steps {
-                dir('ansible/native') {
-                    withCredentials([
-                        string(
-                            credentialsId: 'ansible-vault-password',
-                            variable: 'VAULT_PASS'
-                        )
-                    ]) {
-                        sh '''
-                        echo "$VAULT_PASS" > .vault_pass
-                        /opt/homebrew/bin/ansible frontend \
-                        -i inventory.ini \
-                        -m shell \
-                        -a "systemctl is-active space2study-frontend" \
-                        --vault-password-file .vault_pass
-
-                        rm -f .vault_pass
-
-                        '''
-                    }
-                }
+                sh """
+                ssh -o StrictHostKeyChecking=no \
+                -i ~/.ssh/aws-space2study \
+                ubuntu@${CONTROL_PLANE_IP} \
+                "kubectl get pods -A"
+                """
             }
         }
-
-        stage('Backend API Check') {
-            steps {
-                dir('ansible/native') {
-                    withCredentials([
-                        string(
-                            credentialsId: 'ansible-vault-password',
-                            variable: 'VAULT_PASS'
-                        )
-                    ]) {
-                        sh '''
-                        echo "$VAULT_PASS" > .vault_pass
-                        /opt/homebrew/bin/ansible backend \
-                        -i inventory.ini \
-                        -m shell \
-                        -a "curl -I http://localhost:3000  > /dev/null" \
-                        --vault-password-file .vault_pass
-
-                        rm -f .vault_pass                        
-                        '''
-                    }
-                }
-            }
-        }
-
-        stage('Frontend HTTP Check') {
-            steps {
-                dir('ansible/native') {
-                    withCredentials([
-                        string(
-                            credentialsId: 'ansible-vault-password',
-                            variable: 'VAULT_PASS'
-                        )
-                    ]) {
-                        sh '''
-                        echo "$VAULT_PASS" > .vault_pass
-                        /opt/homebrew/bin/ansible frontend \
-                        -i inventory.ini \
-                        -m shell \
-                        -a "curl -I http://localhost:3001  > /dev/null" \
-                        --vault-password-file .vault_pass
-
-                        rm -f .vault_pass
-                        '''
-                    }
-                }
-            }
-        }
-       
-        
-        stage('Get Backend IP') {
-            steps {
-                dir('terraform') {
-                    script {
-                        env.FRONT_IP = sh(
-                        script: "/opt/homebrew/bin/terraform output -raw frontend_ip",
-                        returnStdout: true
-                ).trim()
-            }
-        }
-    }
-}
-
-        stage('Backend Smoke Test') {
-            agent { label 'agent' }
-
-            steps {
-                sh '''
-                curl -f http://${FRONT_IP}:3001
-                '''
-    }
-}
-
 
     }
 }
