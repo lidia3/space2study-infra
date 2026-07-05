@@ -1,0 +1,10 @@
+---
+- hosts: control_plane
+  gather_facts: false
+
+  vars_files:
+    - inventory/group_vars/all.yml
+
+  tasks:
+    - debug:
+        var: mongodb_host
