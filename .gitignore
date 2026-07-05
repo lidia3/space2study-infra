@@ -4,6 +4,8 @@
 
 
 # Terraform
+*.tfvars
+!terraform/k8s/terraform.tfvars
 .terraform/
 *.tfstate
 *.tfstate.*
