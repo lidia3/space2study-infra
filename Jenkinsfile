@@ -3,6 +3,18 @@ pipeline {
 
     stages {
 
+        stage('Debug Terraform') {
+            steps {
+                dir('terraform/k8s') {
+                    sh '''
+                    pwd
+                    ls -la
+                    '''
+                }
+            }
+         }
+
+
         stage('Terraform Init') {
             steps {
                 dir('terraform/k8s') {
