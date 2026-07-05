@@ -3,7 +3,7 @@
   become: true
 
   roles:
-    - mongodb
-    - backend
-    - frontend
+#    - mongodb
+#    - backend
+#    - frontend
     - deploy-app
