@@ -7,6 +7,12 @@ resource "aws_instance" "control_plane" {
   associate_public_ip_address = true
 
 
+  root_block_device {
+    volume_size           = 20
+    volume_type           = "gp3"
+    delete_on_termination = true
+  }
+
   tags = {
     Name = "${var.project_name}-control-plane"
   }
@@ -20,6 +26,12 @@ resource "aws_instance" "worker" {
   key_name                    = aws_key_pair.deployer.key_name
   associate_public_ip_address = true
 
+
+  root_block_device {
+    volume_size           = 20
+    volume_type           = "gp3"
+    delete_on_termination = true
+  }
 
   tags = {
     Name = "${var.project_name}-worker"
