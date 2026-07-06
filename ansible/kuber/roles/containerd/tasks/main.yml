@@ -1,8 +1,21 @@
 ---
-- name: Install containerd
+
+
+- name: Install containerd 1.7
   apt:
-    name: containerd
+    name: containerd=1.7.12-0ubuntu4
     state: present
+
+- name: Hold containerd version
+  dpkg_selections:
+    name: containerd
+    selection: hold
+
+
+#- name: Install containerd
+#  apt:
+#    name: containerd
+#    state: present
 
 - name: Create containerd directory
   file:
