@@ -5,12 +5,14 @@ metadata:
   name: frontend
   namespace: space2study
 
+
 spec:
+  type: NodePort
+
   selector:
     app: frontend
 
   ports:
-  - port: 3000
-    targetPort: 3000
-
-  type: LoadBalancer
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30080
