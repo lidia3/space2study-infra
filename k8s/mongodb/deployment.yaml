@@ -29,10 +29,6 @@ spec:
 
         - containerPort: 27017
 
-        envFrom:
-
-        - secretRef:
-            name: mongodb-secret
 
         volumeMounts:
 
