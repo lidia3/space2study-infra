@@ -27,7 +27,7 @@ spec:
         imagePullPolicy: Always
 
         ports:
-        - containerPort: 3001
+        - containerPort: 3000
 
         env:
         - name: VITE_API_BASE_PATH
