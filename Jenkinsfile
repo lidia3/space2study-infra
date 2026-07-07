@@ -128,6 +128,7 @@ worker
                         echo "$VAULT_PASS" > .vault_pass
 
                         /opt/homebrew/bin/ansible-playbook \
+                        -vvv \
                         -i inventory.ini \
                         playbooks/site.yml \
                         --vault-password-file .vault_pass
