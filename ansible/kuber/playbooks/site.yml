@@ -3,4 +3,4 @@
 - import_playbook: init-control-plane.yml
 - import_playbook: join-worker.yml
 - import_playbook: deploy-space2study.yml
-- import_playbook: deploy-ingress.yaml
+- import_playbook: deploy-ingress.yml
