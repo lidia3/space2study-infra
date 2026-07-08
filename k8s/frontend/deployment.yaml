@@ -31,7 +31,7 @@ spec:
 
         env:
         - name: VITE_API_BASE_PATH
-          value: "http://<PUBLIC_IP_CONTROL_PLANE>:30081"
+          value: "/auth"
 
 
         resources:
