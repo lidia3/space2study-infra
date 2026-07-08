@@ -1,0 +1,32 @@
+---
+- hosts: control_plane
+  become: true
+
+  tasks:
+
+    - name: Install ingress-nginx
+      command: >
+        kubectl apply -f
+        https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.0/deploy/static/provider/cloud/deploy.yaml
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
+
+    - name: Wait for ingress controller
+      command: >
+        kubectl wait
+        --namespace ingress-nginx
+        --for=condition=available
+        deployment/ingress-nginx-controller
+        --timeout=300s
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
+
+    - name: Copy ingress manifest
+      copy:
+        src: ../../k8s/ingress.yaml
+        dest: /opt/k8s/ingress.yaml
+
+    - name: Apply ingress
+      command: kubectl apply -f /opt/k8s/ingress.yaml
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
