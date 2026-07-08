@@ -23,7 +23,7 @@
 
     - name: Copy ingress manifest
       copy:
-        src: ../../k8s/ingress.yaml
+        src: ../../../k8s/ingress.yaml
         dest: /opt/k8s/ingress.yaml
 
     - name: Apply ingress
