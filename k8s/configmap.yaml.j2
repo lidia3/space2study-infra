@@ -9,7 +9,7 @@ data:
 
   SERVER_PORT: "3000"
 
-  CLIENT_URL: "http://frontend:3001"
+  CLIENT_URL: "http://{{ node_public_ip }}:{{ frontend_nodeport }}"
 
   SERVER_URL: "http://backend:3000"
 
