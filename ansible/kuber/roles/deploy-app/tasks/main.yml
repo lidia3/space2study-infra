@@ -19,16 +19,6 @@
       set_fact:
         node_public_ip: "{{ ansible_host | default(inventory_hostname) }}"
 
-    - name: Get frontend NodePort from service
-      command: >
-        kubectl get svc frontend -n space2study
-        -o jsonpath='{.spec.ports[0].nodePort}'
-      register: frontend_port_result
-      changed_when: false
-
-    - name: Set frontend NodePort fact
-      set_fact:
-        frontend_nodeport: "{{ frontend_port_result.stdout }}"
 
     - name: Render ConfigMap
       template:
