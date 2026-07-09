@@ -30,3 +30,28 @@
       command: kubectl apply -f /opt/k8s/ingress.yaml
       environment:
         KUBECONFIG: /home/ubuntu/.kube/config
+
+    - name: Get ingress HTTP NodePort
+      shell: >
+        kubectl get svc ingress-nginx-controller
+        -n ingress-nginx
+        -o jsonpath='{.spec.ports[?(@.port==80)].nodePort}'
+      register: ingress_nodeport
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
+
+    - name: Update backend CLIENT_URL
+      shell: >
+        kubectl set env deployment/backend
+        -n space2study
+        CLIENT_URL=http://{{ ansible_host | default(inventory_hostname) }}:{{ ingress_nodeport.stdout }}
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
+
+    - name: Wait for backend rollout
+      command: >
+        kubectl rollout status deployment/backend
+        -n space2study
+        --timeout=300s
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
