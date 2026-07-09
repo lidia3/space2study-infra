@@ -44,7 +44,7 @@
       shell: >
         kubectl set env deployment/backend
         -n space2study
-        CLIENT_URL=http://{{ ansible_host | default(inventory_hostname) }}:{{ ingress_nodeport.stdout }}
+        CLIENT_URL=http://{{ hostvars[groups['worker'][0]].ansible_host | default(groups['worker'][0]) }}:{{ ingress_nodeport.stdout }}
       environment:
         KUBECONFIG: /home/ubuntu/.kube/config
 
