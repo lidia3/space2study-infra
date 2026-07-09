@@ -10,6 +10,23 @@
     src: "{{ playbook_dir }}/../../../k8s/"
     dest: /opt/k8s/
 
+
+- name: Set node public IP from inventory
+  set_fact:
+    node_public_ip: "{{ ansible_host | default(inventory_hostname) }}"
+
+- name: Get frontend NodePort from service
+  command: >
+    kubectl get svc frontend -n space2study
+    -o jsonpath='{.spec.ports[0].nodePort}'
+  register: frontend_port_result
+  changed_when: false
+
+- name: Set frontend NodePort fact
+  set_fact:
+    frontend_nodeport: "{{ frontend_port_result.stdout }}"
+
+
 - name: Render ConfigMap
   template:
     src: "{{ playbook_dir }}/../../../k8s/configmap.yaml.j2"
