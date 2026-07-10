@@ -4,3 +4,4 @@
 - import_playbook: join-worker.yml
 - import_playbook: deploy-space2study.yml
 - import_playbook: deploy-ingress.yml
+- import_playbook: deploy-monitoring.yml
