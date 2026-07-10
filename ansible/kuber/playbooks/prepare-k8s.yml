@@ -2,6 +2,12 @@
 - hosts: kubernetes
   become: true
 
+  pre_tasks:
+    - name: Wait for SSH connection
+      wait_for_connection:
+        delay: 10
+        timeout: 300
+
   roles:
     - common
     - containerd

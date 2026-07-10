@@ -21,6 +21,22 @@
       environment:
         KUBECONFIG: /home/ubuntu/.kube/config
 
+    - name: Wait for ingress controller pod
+      command: >
+        kubectl wait
+        --namespace ingress-nginx
+        --for=condition=Ready
+        pod
+        -l app.kubernetes.io/component=controller
+        --timeout=300s
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
+
+    - name: Wait for admission webhook
+      pause:
+        seconds: 20
+
+
     - name: Copy ingress manifest
       copy:
         src: ../../../k8s/ingress.yaml
@@ -28,8 +44,12 @@
 
     - name: Apply ingress
       command: kubectl apply -f /opt/k8s/ingress.yaml
-      environment:
-        KUBECONFIG: /home/ubuntu/.kube/config
+        register: ingress_apply
+        retries: 10
+        delay: 10
+        until: ingress_apply.rc == 0
+        environment:
+          KUBECONFIG: /home/ubuntu/.kube/config
 
     - name: Get ingress HTTP NodePort
       shell: >
