@@ -44,12 +44,12 @@
 
     - name: Apply ingress
       command: kubectl apply -f /opt/k8s/ingress.yaml
-        register: ingress_apply
-        retries: 10
-        delay: 10
-        until: ingress_apply.rc == 0
-        environment:
-          KUBECONFIG: /home/ubuntu/.kube/config
+      register: ingress_apply
+      retries: 10
+      delay: 10
+      until: ingress_apply.rc == 0
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
 
     - name: Get ingress HTTP NodePort
       shell: >
