@@ -3,5 +3,9 @@
   hosts: control_plane
   become: true
 
+  vars_files:
+    - ../inventory/group_vars/all.yml
+    - ../inventory/group_vars/all/vault.yaml
+
   roles:
     - monitoring
