@@ -60,15 +60,3 @@
     --timeout 10m
     -f /opt/k8s/monitoring-values.yaml
 
-- name: Copy Grafana Ingress manifest
-  ansible.builtin.template:
-    src: grafana-ingress.yaml.j2
-    dest: /tmp/grafana-ingress.yaml
-
-- name: Deploy Grafana Ingress
-  become: true
-  become_user: ubuntu
-  environment:
-    KUBECONFIG: /home/ubuntu/.kube/config
-  ansible.builtin.command:
-    cmd: kubectl apply -f /tmp/grafana-ingress.yaml
